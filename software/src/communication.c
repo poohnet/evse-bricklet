@@ -69,6 +69,8 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		case FID_FACTORY_RESET: return factory_reset(message);
 		case FID_SET_BOOST_MODE: return set_boost_mode(message);
 		case FID_GET_BOOST_MODE: return get_boost_mode(message, response);
+		case FID_SET_BOOST_CURRENT: return set_boost_current(message);
+		case FID_GET_BOOST_CURRENT: return get_boost_current(message, response);
 		default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
 	}
 }
@@ -510,6 +512,20 @@ BootloaderHandleMessageResponse set_boost_mode(const SetBoostMode *data) {
 BootloaderHandleMessageResponse get_boost_mode(const GetBoostMode *data, GetBoostMode_Response *response) {
 	response->header.length      = sizeof(GetBoostMode_Response);
 	response->boost_mode_enabled = evse.boost_mode_enabled;
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse set_boost_current(const SetBoostCurrent *data) {
+
+	evse.boost_current = MIN(data->boost_current, 1200);
+
+	return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_boost_current(const GetBoostCurrent *data, GetBoostCurrent_Response *response) {
+	response->header.length = sizeof(GetBoostCurrent_Response);
+	response->boost_current	= evse.boost_current;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }

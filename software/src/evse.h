@@ -108,6 +108,8 @@ typedef struct {
 
 	bool boost_mode_enabled;
 
+	uint16_t boost_current;
+
 	uint8_t storage[EVSE_STORAGE_PAGES][64];
 } EVSE;
 
