@@ -123,6 +123,8 @@ void communication_init(void);
 #define FID_FACTORY_RESET 21
 #define FID_SET_BOOST_MODE 22
 #define FID_GET_BOOST_MODE 23
+#define FID_SET_BOOST_CURRENT 24
+#define FID_GET_BOOST_CURRENT 25
 
 
 typedef struct {
@@ -373,6 +375,20 @@ typedef struct {
 	bool boost_mode_enabled;
 } __attribute__((__packed__)) GetBoostMode_Response;
 
+typedef struct {
+	TFPMessageHeader header;
+	uint16_t boost_current;
+} __attribute__((__packed__)) SetBoostCurrent;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) GetBoostCurrent;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint16_t boost_current;
+} __attribute__((__packed__)) GetBoostCurrent_Response;
+
 
 // Function prototypes
 BootloaderHandleMessageResponse get_state(const GetState *data, GetState_Response *response);
@@ -398,6 +414,8 @@ BootloaderHandleMessageResponse get_all_data_1(const GetAllData1 *data, GetAllDa
 BootloaderHandleMessageResponse factory_reset(const FactoryReset *data);
 BootloaderHandleMessageResponse set_boost_mode(const SetBoostMode *data);
 BootloaderHandleMessageResponse get_boost_mode(const GetBoostMode *data, GetBoostMode_Response *response);
+BootloaderHandleMessageResponse set_boost_current(const SetBoostCurrent *data);
+BootloaderHandleMessageResponse get_boost_current(const GetBoostCurrent *data, GetBoostCurrent_Response *response);
 
 // Callbacks
 
