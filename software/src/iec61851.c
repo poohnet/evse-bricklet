@@ -149,6 +149,10 @@ uint16_t iec61851_get_duty_cycle_for_ma(uint32_t ma) {
 		return 1000;
 	}
 
+	if (evse.boost_mode_enabled) {
+		ma += evse.boost_current;
+	}
+
 	uint32_t duty_cycle;
 	if(ma <= 51000) {
 		duty_cycle = ma/60; // For 6A-51A: xA = %duty*0.6

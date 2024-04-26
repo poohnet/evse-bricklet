@@ -391,12 +391,7 @@ void evse_factory_reset(void) {
 }
 
 uint16_t evse_get_cp_duty_cycle(void) {
-	uint16_t duty_cycle = (64000 - ccu4_pwm_get_duty_cycle(EVSE_CP_PWM_SLICE_NUMBER))/64;
-	if((duty_cycle >= 4) && (duty_cycle != 1000) && evse.boost_mode_enabled) {
-		return duty_cycle - 4;
-	}
-
-	return duty_cycle;
+	return (64000 - ccu4_pwm_get_duty_cycle(EVSE_CP_PWM_SLICE_NUMBER))/64;
 }
 
 void evse_set_cp_duty_cycle(uint16_t duty_cycle) {
@@ -411,15 +406,9 @@ void evse_set_cp_duty_cycle(uint16_t duty_cycle) {
 	if(use_16a) {
 		duty_cycle = 266;
 	}
-	// According to IEC 61841-1 table A2 the duty cycle is allowed to be off by up to 5us.
-	// If boost mode is enabled we add 4us to the duty cycle. This means that we are still within the standard.
-	uint16_t adc_boost = 0;
-	if((duty_cycle != 0) && (duty_cycle != 1000) && evse.boost_mode_enabled) {
-		adc_boost = 4;
-	}
 
 	const uint16_t current_cp_duty_cycle = evse_get_cp_duty_cycle();
-	const uint16_t new_cp_duty_cycle     = (uint16_t)(64000 - (duty_cycle + adc_boost)*64);
+	const uint16_t new_cp_duty_cycle     = (uint16_t)(64000 - duty_cycle*64);
 
 	if(current_cp_duty_cycle != duty_cycle) {
 		// Ignore the next 10 ADC measurements between CP/PE after we
@@ -460,6 +449,7 @@ void evse_init(void) {
 	evse.config_jumper_current_software = 6000; // default software configuration is 6A
 	evse.max_current_configured = 32000; // default user defined current ist 32A
 	evse.boost_mode_enabled = false;
+	evse.boost_current = 0;
 
 	evse_load_calibration();
 	evse_load_user_calibration();
