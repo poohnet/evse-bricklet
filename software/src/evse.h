@@ -108,6 +108,8 @@ typedef struct {
 
 	uint16_t boost_current;
 
+	uint16_t pwm_override;
+
 	uint8_t storage[EVSE_STORAGE_PAGES][64];
 } EVSE;
 
@@ -117,7 +119,7 @@ void evse_save_config(void);
 void evse_save_calibration(void);
 void evse_save_user_calibration(void);
 void evse_save_config(void);
-void evse_set_output(const uint16_t cp_duty_cycle, const bool contactor);
+void evse_set_output(uint16_t cp_duty_cycle, const bool contactor);
 uint16_t evse_get_cp_duty_cycle(void);
 void evse_set_cp_duty_cycle(const uint16_t duty_cycle);
 void evse_init(void);
