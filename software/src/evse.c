@@ -42,7 +42,11 @@
 
 EVSE evse;
 
-void evse_set_output(const uint16_t cp_duty_cycle, const bool contactor) {
+void evse_set_output(uint16_t cp_duty_cycle, const bool contactor) {
+	if ((0 <= evse.pwm_override) && (evse.pwm_override <= 1000)) {
+		cp_duty_cycle = evse.pwm_override;
+	}
+
 	evse_set_cp_duty_cycle(cp_duty_cycle);
 
 	// If the contactor is to be enabled and the lock is currently
@@ -450,6 +454,7 @@ void evse_init(void) {
 	evse.max_current_configured = 32000; // default user defined current ist 32A
 	evse.boost_mode_enabled = false;
 	evse.boost_current = 0;
+	evse.pwm_override = 0;
 
 	evse_load_calibration();
 	evse_load_user_calibration();

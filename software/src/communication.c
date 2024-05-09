@@ -1,5 +1,5 @@
 /* evse-bricklet
- * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2024 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.c: TFP protocol message handling
  *
@@ -71,6 +71,9 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		case FID_GET_BOOST_MODE: return get_boost_mode(message, response);
 		case FID_SET_BOOST_CURRENT: return set_boost_current(message);
 		case FID_GET_BOOST_CURRENT: return get_boost_current(message, response);
+		case FID_SET_PWM_OVERRIDE: return set_pwm_override(message);
+		case FID_GET_PWM_OVERRIDE: return get_pwm_override(message, response);
+
 		default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
 	}
 }
@@ -522,7 +525,6 @@ BootloaderHandleMessageResponse get_boost_mode(const GetBoostMode *data, GetBoos
 }
 
 BootloaderHandleMessageResponse set_boost_current(const SetBoostCurrent *data) {
-
 	evse.boost_current = MIN(data->boost_current, 1200);
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
@@ -531,6 +533,19 @@ BootloaderHandleMessageResponse set_boost_current(const SetBoostCurrent *data) {
 BootloaderHandleMessageResponse get_boost_current(const GetBoostCurrent *data, GetBoostCurrent_Response *response) {
 	response->header.length = sizeof(GetBoostCurrent_Response);
 	response->boost_current	= evse.boost_current;
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse set_pwm_override(const SetPWMOverride *data) {
+	evse.pwm_override = MIN(data->pwm_override, 1000);
+
+	return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_pwm_override(const GetPWMOverride *data, GetPWMOverride_Response *response) {
+	response->header.length = sizeof(GetPWMOverride_Response);
+	response->pwm_override = evse.pwm_override;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }

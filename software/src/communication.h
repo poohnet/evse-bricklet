@@ -1,5 +1,5 @@
 /* evse-bricklet
- * Copyright (C) 2022 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2024 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.h: TFP protocol message handling
  *
@@ -125,6 +125,8 @@ void communication_init(void);
 #define FID_GET_BOOST_MODE 23
 #define FID_SET_BOOST_CURRENT 24
 #define FID_GET_BOOST_CURRENT 25
+#define FID_SET_PWM_OVERRIDE 26
+#define FID_GET_PWM_OVERRIDE 27
 
 
 typedef struct {
@@ -389,6 +391,20 @@ typedef struct {
 	uint16_t boost_current;
 } __attribute__((__packed__)) GetBoostCurrent_Response;
 
+typedef struct {
+	TFPMessageHeader header;
+	uint16_t pwm_override;
+} __attribute__((__packed__)) SetPWMOverride;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) GetPWMOverride;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint16_t pwm_override;
+} __attribute__((__packed__)) GetPWMOverride_Response;
+
 
 // Function prototypes
 BootloaderHandleMessageResponse get_state(const GetState *data, GetState_Response *response);
@@ -416,6 +432,8 @@ BootloaderHandleMessageResponse set_boost_mode(const SetBoostMode *data);
 BootloaderHandleMessageResponse get_boost_mode(const GetBoostMode *data, GetBoostMode_Response *response);
 BootloaderHandleMessageResponse set_boost_current(const SetBoostCurrent *data);
 BootloaderHandleMessageResponse get_boost_current(const GetBoostCurrent *data, GetBoostCurrent_Response *response);
+BootloaderHandleMessageResponse set_pwm_override(const SetPWMOverride *data);
+BootloaderHandleMessageResponse get_pwm_override(const GetPWMOverride *data, GetPWMOverride_Response *response);
 
 // Callbacks
 
